@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -9,6 +10,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<dbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+
+builder.Services.AddIdentity<OnlineQuizSystem.Models.User, Microsoft.AspNetCore.Identity.IdentityRole>()
+    .AddEntityFrameworkStores<dbContext>()
+    .AddDefaultTokenProviders();
 //test connection string
 
 

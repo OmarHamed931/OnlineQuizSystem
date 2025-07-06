@@ -1,9 +1,11 @@
 ﻿namespace OnlineQuizSystem.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
-public class dbContext : DbContext
+public class dbContext : IdentityDbContext<Models.User>
 {
-    public dbContext(DbContextOptions<dbContext> options) : base(options)
+    public dbContext(DbContextOptions<dbContext> options)
+        : base(options)
     {
     }
 
