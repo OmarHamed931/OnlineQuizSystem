@@ -1,8 +1,5 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using Microsoft.Data.SqlClient;
 using OnlineQuizSystem.Data;
 
 var builder = WebApplication.CreateBuilder(args);
