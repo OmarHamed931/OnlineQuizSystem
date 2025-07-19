@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using OnlineQuizSystem.Services.AuthService;
 
 namespace OnlineQuizSystem.Controllers;
 
@@ -7,14 +8,13 @@ namespace OnlineQuizSystem.Controllers;
 [Route("api/[controller]")]
 public class authController : Controller
 {
-    private readonly UserManager<Models.User> _userManager;
-    private readonly SignInManager<Models.User> _signInManager;
+    private readonly IAuthService _authService;
     
-    public authController(UserManager<Models.User> userManager, SignInManager<Models.User> signInManager)
+    public authController(IAuthService authService)
     {
-        _userManager = userManager;
-        _signInManager = signInManager;
+        _authService = authService;
     }
+    
 
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] DTOs.UserDTOs.RegisterUserDTO registerUserDTO)

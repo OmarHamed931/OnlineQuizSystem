@@ -16,6 +16,9 @@ builder.Services.AddIdentity<OnlineQuizSystem.Models.User, Microsoft.AspNetCore.
     .AddDefaultTokenProviders();
 //test connection string
 
+builder.Services.AddScoped<OnlineQuizSystem.Services.AuthService.IAuthService, OnlineQuizSystem.Services.AuthService.AuthService>();
+builder.Services.AddScoped<OnlineQuizSystem.Services.JWTService.ITokenService, OnlineQuizSystem.Services.JWTService.TokenService>();
+
 
 
 builder.Services.AddAuthentication(options =>
@@ -27,9 +30,9 @@ builder.Services.AddAuthentication(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = false,
             ValidateIssuerSigningKey = true,
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             ValidAudience = builder.Configuration["Jwt:Audience"],
