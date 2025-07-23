@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
-public class dbContext : IdentityDbContext<Models.User>
+public class DbContext : IdentityDbContext<Models.User>
 {
-    public dbContext(DbContextOptions<dbContext> options)
+    public DbContext(DbContextOptions<DbContext> options)
         : base(options)
     {
     }
