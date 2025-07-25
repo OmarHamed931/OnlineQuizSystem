@@ -13,11 +13,12 @@ public class UserRepo : IUserRepo
         _signInManager = signInManager;
     }
 
-    public Task<string> RegisterUserAsync(User user , string inputPassword)
+    // register should return the user details 
+    public Task<string> RegisterUserAsync(User user, string inputPassword)
     {
-        var result = _userManager.CreateAsync(user , inputPassword).Result;
+        var result = _userManager.CreateAsync(user, inputPassword).Result;
         return Task.FromResult(result.Succeeded ? "User registered successfully" : string.Join(", ", result.Errors.Select(e => e.Description)));
-        //register method will produce a token later 
+        //register method might produce a token later 
     }
     public async Task<string> LoginUserAsync(User user)
     {

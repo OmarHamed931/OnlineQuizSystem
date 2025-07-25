@@ -13,16 +13,18 @@ public class AuthController : Controller
     {
         _authService = authService;
     }
-    
-    
+
+
 
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] DTOs.UserDTOs.RegisterUserDTO registerUserDTO)
     {
-        
-        return BadRequest("Registration not implemented yet.");
-        
-        // authentication service will be used to register the user (not implemented yet)
+        var result = await _authService.RegisterUserAsync(registerUserDTO);
+        if (result == "User registered successfully")
+        {
+            return Ok(result);
+        }
+        return BadRequest(result);
     }
     
     
