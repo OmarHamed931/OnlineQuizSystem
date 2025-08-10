@@ -1,10 +1,10 @@
 ﻿namespace OnlineQuizSystem.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using OnlineQuizSystem.Models;
 
-public class DbContext : IdentityDbContext<Models.User>
+public class AppDbContext : DbContext
 {
-    public DbContext(DbContextOptions<DbContext> options)
+    public AppDbContext(DbContextOptions<DbContext> options)
         : base(options)
     {
     }
@@ -12,7 +12,7 @@ public class DbContext : IdentityDbContext<Models.User>
     // public DbSet<Models.Quiz> Quizzes { get; set; }
     // public DbSet<Models.Question> Questions { get; set; }
     // public DbSet<Models.Answer> Answers { get; set; }
-    public DbSet<Models.User> Users { get; set; }
+    public DbSet<User> Users { get; set; }
     // public DbSet<Models.UserQuiz> UserQuizzes { get; set; }
 }
 // Uncomment the DbSet properties above when you have defined the corresponding models in the Models namespace.

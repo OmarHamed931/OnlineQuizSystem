@@ -1,35 +1,54 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using OnlineQuizSystem.Data;
+using OnlineQuizSystem.DTOs;
 using OnlineQuizSystem.Models;
 
 namespace OnlineQuizSystem.Repositories.UserRepo;
 
 public class UserRepo : IUserRepo
 {
-    private readonly UserManager<Models.User> _userManager;
-    private readonly SignInManager<Models.User> _signInManager;
-    public UserRepo(UserManager<Models.User> userManager, SignInManager<Models.User> signInManager)
-    {
-        _userManager = userManager;
-        _signInManager = signInManager;
-    }
+   private readonly AppDbContext _context;
+   
+   public UserRepo(AppDbContext context)
+   {
+      _context = context;
+   }
 
-    // register should return the user details 
-    public Task<string> RegisterUserAsync(User user, string inputPassword)
-    {
-        var result = _userManager.CreateAsync(user, inputPassword).Result;
-        return Task.FromResult(result.Succeeded ? "User registered successfully" : string.Join(", ", result.Errors.Select(e => e.Description)));
-        //register method might produce a token later 
-    }
-    public async Task<string> LoginUserAsync(User user)
-    {
-        var result = await _signInManager.PasswordSignInAsync(user, user.PasswordHash, isPersistent: false, lockoutOnFailure: false);
-        if (result.Succeeded)
-        {
-            return "User logged in successfully";
-        }
-        else
-        {
-            return "Login failed";
-        }
-    }
+   public async Task<UserDTOs.UserDTO> RegisterUserAsync(User User)
+   {
+      UserDTOs.UserDTO UserDto = new UserDTOs.UserDTO
+      {
+         Id = User.Id.ToString(),
+         Email = User.Email,
+         Role = User.Role
+      };
+      _context.Add(User);
+      await _context.SaveChangesAsync();
+      return UserDto;
+      
+      
+   }
+   
+   public async Task<User?> GetUserByEmailAsync(string email)
+   {
+      return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+   }
+   public async Task<User?> GetUserByIdAsync(string userId)
+   {
+      return await _context.Users.FindAsync(userId);
+   }
+
+   public async Task<bool> IsEmailExistsAsync(string email)
+   {
+      return await _context.Users.AnyAsync(u => u.Email == email);
+   }
+   public async Task<bool> IsUserExistsAsync(string userId)
+   {
+      return await _context.Users.AnyAsync(u => u.Id.ToString() == userId);
+   }
+   
+   
+   
+
 }

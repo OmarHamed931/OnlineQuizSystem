@@ -4,6 +4,6 @@ namespace OnlineQuizSystem.Services.AuthService;
 
 public interface IAuthService
 {
-    public Task<string> RegisterUserAsync(UserDTOs.RegisterUserDTO userDto);
-    public Task<string> LoginUserAsync(UserDTOs.LoginUserDTO userDto);
+    public Task<UserDTOs.UserDTO> RegisterUserAsync(UserDTOs.RegisterUserDTO userDto);
+    public Task<UserDTOs.UserDTO> LoginUserAsync(UserDTOs.LoginUserDTO userDto);
 }

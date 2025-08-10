@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using OnlineQuizSystem.Models;
 
 namespace OnlineQuizSystem.Services.JWTService;
 
@@ -13,13 +14,13 @@ public class TokenService : ITokenService
         _configurationBuilder = configurationBuilder;
     }
     
-    public string GenerateToken(string userId, string email, bool isAdmin)
+    public string GenerateToken(User User)
     {
         var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.NameIdentifier, userId),
-            new Claim(ClaimTypes.Email, email),
-            new Claim(ClaimTypes.Role, isAdmin ? "Admin" : "User")
+            new Claim(ClaimTypes.NameIdentifier, User.Id.ToString()),
+            new Claim(ClaimTypes.Email, User.Email),
+            new Claim(ClaimTypes.Role, User.Role),
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configurationBuilder.Build().GetSection("Jwt:Key").Value));

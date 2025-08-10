@@ -6,18 +6,18 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using OnlineQuizSystem.Models;
 using OnlineQuizSystem.Services.AuthService;
 using OnlineQuizSystem.Services.JWTService;
-using OnlineQuizSystem.Data;
-using DbContext = OnlineQuizSystem.Data.DbContext;
+/*using OnlineQuizSystem.Data;
+using DbContext = OnlineQuizSystem.Data.DbContext;*/
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<DbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+/*builder.Services.AddDbContext<DbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));*/
 
 // will be refactored to own user model
-builder.Services.AddIdentity<User, IdentityRole>()
+/*builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<DbContext>()
-    .AddDefaultTokenProviders();
+    .AddDefaultTokenProviders();*/
 //test connection string
 
 builder.Services.AddScoped<IAuthService, AuthService>();
