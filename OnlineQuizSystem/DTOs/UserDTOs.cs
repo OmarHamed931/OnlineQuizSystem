@@ -25,7 +25,7 @@ public class UserDTOs
     }
     public class UserDTO
     {
-        public string Id { get; set; } = string.Empty;
+        public string? Id { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string Role { get; set; } = string.Empty; // Default role is User
         public string? Token { get; set; } = string.Empty; // JWT token for authentication

@@ -7,9 +7,10 @@ namespace OnlineQuizSystem.Models;
 [Index(nameof(Email), IsUnique = true)]
 
 public class User
-{
+{    
+    [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    [Key] public Guid Id { get; }
+    public Guid Id { get; }
     public string Name { get; set; } 
     [Required, MinLength(6, ErrorMessage = "Email must be at least 6 characters long.")]
     [EmailAddress(ErrorMessage = "Invalid email format.")]

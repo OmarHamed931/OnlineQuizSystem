@@ -7,24 +7,33 @@ namespace OnlineQuizSystem.Controllers;
 [Route("api/[controller]")]
 public class AuthController : Controller
 {
-    private readonly IAuthService _authService;  
+    private readonly IAuthService _AuthService;  
     
-    public AuthController(IAuthService authService)
+    public AuthController(IAuthService AuthService)
     {
-        _authService = authService;
+        _AuthService = AuthService;
     }
 
 
 
     [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] DTOs.UserDTOs.RegisterUserDTO registerUserDTO)
+    public async Task<IActionResult> Register([FromBody] DTOs.UserDTOs.RegisterUserDTO RegisterUserDTO)
     {
-        var result = await _authService.RegisterUserAsync(registerUserDTO);
-        if (result == "User registered successfully")
+        // 
+        if (!ModelState.IsValid)
         {
-            return Ok(result);
+            return BadRequest("Invalid user data.");
         }
-        return BadRequest(result);
+        try
+        {
+            var user = await _AuthService.RegisterUserAsync(RegisterUserDTO);
+            return Ok(user);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+      
     }
     
     

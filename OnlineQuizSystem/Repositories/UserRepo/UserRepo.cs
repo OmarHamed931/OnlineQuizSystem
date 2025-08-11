@@ -17,14 +17,14 @@ public class UserRepo : IUserRepo
 
    public async Task<UserDTOs.UserDTO> RegisterUserAsync(User User)
    {
+      await _context.AddAsync(User);
+      await _context.SaveChangesAsync();
       UserDTOs.UserDTO UserDto = new UserDTOs.UserDTO
       {
          Id = User.Id.ToString(),
          Email = User.Email,
          Role = User.Role
       };
-      _context.Add(User);
-      await _context.SaveChangesAsync();
       return UserDto;
       
       

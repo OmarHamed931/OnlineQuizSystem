@@ -3,25 +3,29 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication;
 using OnlineQuizSystem.Models;
 using OnlineQuizSystem.Services.AuthService;
 using OnlineQuizSystem.Services.JWTService;
-/*using OnlineQuizSystem.Data;
-using DbContext = OnlineQuizSystem.Data.DbContext;*/
+using OnlineQuizSystem.Data;
+using OnlineQuizSystem.Repositories.UserRepo;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
-/*builder.Services.AddDbContext<DbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));*/
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// will be refactored to own user model
-/*builder.Services.AddIdentity<User, IdentityRole>()
-    .AddEntityFrameworkStores<DbContext>()
-    .AddDefaultTokenProviders();*/
-//test connection string
+
+
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ITokenService,TokenService>();
+builder.Services.AddScoped<IUserRepo, UserRepo>();
+
+// add IconfigurationBuilder to TokenService
+builder.Services.AddSingleton<IConfigurationBuilder>(builder.Configuration);
+
 
 
 
