@@ -36,6 +36,24 @@ public class AuthController : Controller
       
     }
     
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] DTOs.UserDTOs.LoginUserDTO LoginUserDTO)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest("Invalid user data.");
+        }
+        try
+        {
+            var user = await _AuthService.LoginUserAsync(LoginUserDTO);
+            return Ok(user);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+    
     
     
 
