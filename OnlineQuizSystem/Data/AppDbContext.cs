@@ -10,7 +10,8 @@ public class AppDbContext : DbContext
     }
 
     // public DbSet<Models.Quiz> Quizzes { get; set; }
-    // public DbSet<Models.Question> Questions { get; set; }
+    public DbSet<Models.Question> Questions { get; set; }
+    public DbSet<Models.Choice> Choices { get; set; }
     // public DbSet<Models.Answer> Answers { get; set; }
     public DbSet<User> Users { get; set; }
     // public DbSet<Models.UserQuiz> UserQuizzes { get; set; }
@@ -20,11 +21,22 @@ public class AppDbContext : DbContext
         base.OnModelCreating(modelBuilder);
         
         // Configure the User entity
-        modelBuilder.Entity<User>()
-            .HasKey(u => u.Id);
-        modelBuilder.Entity<User>()
-            .HasIndex(u => u.Email)
-            .IsUnique();
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.HasKey(u => u.Id);
+            entity.HasIndex(u => u.Email).IsUnique();
+        });
+        // Configure the Question entity
+        modelBuilder.Entity<Question>()
+            .HasKey(q => q.Id);
+        // Configure the Choices entity
+        modelBuilder.Entity<Choice>()
+            .HasKey(c => c.Id);
+        modelBuilder.Entity<Choice>()
+            .HasOne(c => c.Question)
+            .WithMany(q => q.Choices)
+            .HasForeignKey(c => c.QuestionId)
+            .IsRequired();
 
         // Add any additional configurations for other entities here
     }
