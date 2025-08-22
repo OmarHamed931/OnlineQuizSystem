@@ -1,4 +1,6 @@
-﻿namespace OnlineQuizSystem.Data;
+﻿using OnlineQuizSystem.Utilities;
+
+namespace OnlineQuizSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using OnlineQuizSystem.Models;
 
@@ -11,7 +13,6 @@ public class AppDbContext : DbContext
 
     // public DbSet<Models.Quiz> Quizzes { get; set; }
     public DbSet<Models.Question> Questions { get; set; }
-    public DbSet<Models.Choice> Choices { get; set; }
     // public DbSet<Models.Answer> Answers { get; set; }
     public DbSet<User> Users { get; set; }
     // public DbSet<Models.UserQuiz> UserQuizzes { get; set; }
@@ -27,17 +28,17 @@ public class AppDbContext : DbContext
             entity.HasIndex(u => u.Email).IsUnique();
         });
         // Configure the Question entity
-        modelBuilder.Entity<Question>()
-            .HasKey(q => q.Id);
-        // Configure the Choices entity
-        modelBuilder.Entity<Choice>()
-            .HasKey(c => c.Id);
-        modelBuilder.Entity<Choice>()
-            .HasOne(c => c.Question)
-            .WithMany(q => q.Choices)
-            .HasForeignKey(c => c.QuestionId)
-            .IsRequired();
-
+        modelBuilder.Entity<Question>(entity =>
+        {
+            entity.HasKey(q => q.Id);
+            entity.Property(x => x.Type).HasConversion<string>();
+            entity.OwnsMany(q => q.Choices, choice =>
+            {
+                choice.WithOwner().HasForeignKey("QuestionId");
+                choice.HasKey(c => c.Id);
+            });
+        });
+        
         // Add any additional configurations for other entities here
     }
 }

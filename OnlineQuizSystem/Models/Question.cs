@@ -14,10 +14,12 @@ public class Question
     {
         SingleChoice,
         MultipleChoice,
-        shortAnswer,
+        ShortAnswer,
         TrueFalse
     }
     public QuestionType Type { get; set; }
-    public ICollection<Choice?> Choices { get; } = new List<Choice>();
+    public ICollection<Choice?> Choices { get; set; } = new List<Choice>(); // Collection of choices for Single and Multiple Choice questions with correct answers
+    
+    public string? Answer { get; set; } = string.Empty; // For Short Answer questions
     public bool? CorrectAnswer { get; set; } // For True/False questions
 }

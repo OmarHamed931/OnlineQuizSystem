@@ -8,7 +8,10 @@ using OnlineQuizSystem.Models;
 using OnlineQuizSystem.Services.AuthService;
 using OnlineQuizSystem.Services.JWTService;
 using OnlineQuizSystem.Data;
+using OnlineQuizSystem.Repositories.QuestionRepo;
 using OnlineQuizSystem.Repositories.UserRepo;
+using OnlineQuizSystem.Services.QuestionService;
+using OnlineQuizSystem.Utilities;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,13 +21,26 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 
 
-
+// Authentication and Authorization services
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ITokenService,TokenService>();
 builder.Services.AddScoped<IUserRepo, UserRepo>();
 
 // add IconfigurationBuilder to TokenService
 builder.Services.AddSingleton<IConfigurationBuilder>(builder.Configuration);
+
+// Questions services
+
+builder.Services.AddScoped<IQuestionService, QuestionService>();
+builder.Services.AddScoped<IQuestionRepo, QuestionRepo>();
+
+// seeders 
+using (var scope = builder.Services.BuildServiceProvider().CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<AppDbContext>();
+    await Seeder.SeedQuestionsAsync(context);
+}
 
 
 
