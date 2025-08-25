@@ -1,4 +1,5 @@
 using System.Text;
+using GenerativeAI;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -8,6 +9,7 @@ using OnlineQuizSystem.Models;
 using OnlineQuizSystem.Services.AuthService;
 using OnlineQuizSystem.Services.JWTService;
 using OnlineQuizSystem.Data;
+using OnlineQuizSystem.DTOs;
 using OnlineQuizSystem.Repositories.QuestionRepo;
 using OnlineQuizSystem.Repositories.UserRepo;
 using OnlineQuizSystem.Services.QuestionService;
@@ -27,6 +29,7 @@ builder.Services.AddScoped<ITokenService,TokenService>();
 builder.Services.AddScoped<IUserRepo, UserRepo>();
 
 // add IconfigurationBuilder to TokenService
+builder.Configuration.AddEnvironmentVariables();
 builder.Services.AddSingleton<IConfigurationBuilder>(builder.Configuration);
 
 // Questions services
@@ -41,6 +44,20 @@ using (var scope = builder.Services.BuildServiceProvider().CreateScope())
     var context = services.GetRequiredService<AppDbContext>();
     await Seeder.SeedQuestionsAsync(context);
 }
+// AI service test 
+
+/*
+var apiKey = Environment.GetEnvironmentVariable("GEMINI_API_KEY");
+var googleAI = new GoogleAi(apiKey);
+var googleModel = googleAI.CreateGenerativeModel("models/gemini-1.5-flash");
+string Text = "What is the boiling point of water at sea level?";    
+string CorrectAnswer = "100°C";
+string submittedAnswer = "It boils";
+var prompt = $"Question: {Text}\nCorrect Answer: {CorrectAnswer}\nSubmitted Answer: {submittedAnswer}\nIs the submitted answer correct? Answer with 'true' or 'false' with explanation.";
+var response = await googleModel.GenerateObjectAsync<AnswerDTOs.ShortAnswerDTO>(prompt);
+Console.WriteLine($"AI Response: {response.IsCorrect}, Confidence: {response.Confidence}, explanation: {response.explanation}");
+Console.WriteLine(response.Confidence);
+*/
 
 
 
@@ -68,7 +85,6 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
 
 
 var app = builder.Build();
