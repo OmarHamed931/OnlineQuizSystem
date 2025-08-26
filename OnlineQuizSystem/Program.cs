@@ -12,6 +12,7 @@ using OnlineQuizSystem.Data;
 using OnlineQuizSystem.DTOs;
 using OnlineQuizSystem.Repositories.QuestionRepo;
 using OnlineQuizSystem.Repositories.UserRepo;
+using OnlineQuizSystem.Services.AIService;
 using OnlineQuizSystem.Services.QuestionService;
 using OnlineQuizSystem.Utilities;
 
@@ -36,6 +37,9 @@ builder.Services.AddSingleton<IConfigurationBuilder>(builder.Configuration);
 
 builder.Services.AddScoped<IQuestionService, QuestionService>();
 builder.Services.AddScoped<IQuestionRepo, QuestionRepo>();
+
+// AI services
+builder.Services.AddSingleton<IAIService, AIService>();
 
 // seeders 
 using (var scope = builder.Services.BuildServiceProvider().CreateScope())

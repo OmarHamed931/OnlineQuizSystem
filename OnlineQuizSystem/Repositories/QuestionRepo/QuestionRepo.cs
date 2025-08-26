@@ -11,7 +11,7 @@ public class QuestionRepo(AppDbContext _context) : IQuestionRepo
         return await _context.Questions.ToListAsync();
     }
 
-    public async Task<Question?> GetQuestionByIdAsync(int id)
+    public async Task<Question?> GetQuestionByIdAsync(Guid id)
     {
         return await _context.Questions.FindAsync(id);
     }

@@ -12,9 +12,10 @@ public class QuestionService (IQuestionRepo _questionRepo): IQuestionService
         return await _questionRepo.GetAllQuestionsAsync();
     }
 
-    public async Task<Question> GetQuestionByIdAsync(int id)
+    public async Task<Question> GetQuestionByIdAsync(string id)
     {
-        return await _questionRepo.GetQuestionByIdAsync(id);
+        Guid guid = Guid.Parse(id);
+        return await _questionRepo.GetQuestionByIdAsync(guid);
     }
     [Authorize (Roles = "Admin,Instructor")]
     public async Task<Question> AddQuestionAsync(QuestionDTOs.CreateQuestionDTO createQuestion) 
@@ -33,9 +34,10 @@ public class QuestionService (IQuestionRepo _questionRepo): IQuestionService
         return await _questionRepo.AddQuestionAsync(question);
         
     }
-    public async Task<bool> VerifyAnswerAsync(int questionId, List<string> answer)
+    public async Task<bool> VerifyAnswerAsync(string questionId, List<string> answer)
     {
-        var question = await _questionRepo.GetQuestionByIdAsync(questionId);
+        Guid questionGuid = Guid.Parse(questionId);
+        var question = await _questionRepo.GetQuestionByIdAsync(questionGuid);
         if (question == null)
         {
             throw new Exception($"Question with ID {questionId} not found.");

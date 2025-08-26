@@ -5,9 +5,11 @@ namespace OnlineQuizSystem.Services.QuestionService;
 
 public interface IQuestionService
 {
+    // will be refactored once quiz service is ready
+
     public Task<Question> AddQuestionAsync(QuestionDTOs.CreateQuestionDTO questionDto);
-    public Task<Question> GetQuestionByIdAsync(int id);
+    public Task<Question> GetQuestionByIdAsync(string id);
     public Task<IEnumerable<Question>> GetAllQuestionsAsync();
     
-    public Task<bool> VerifyAnswerAsync(int questionId, List<string> answer);
+    public Task<bool> VerifyAnswerAsync(string questionId, List<string> answer);
 }
