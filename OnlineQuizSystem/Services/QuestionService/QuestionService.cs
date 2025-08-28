@@ -2,10 +2,11 @@
 using OnlineQuizSystem.DTOs;
 using OnlineQuizSystem.Models;
 using OnlineQuizSystem.Repositories.QuestionRepo;
+using OnlineQuizSystem.Services.AIService;
 
 namespace OnlineQuizSystem.Services.QuestionService;
 
-public class QuestionService (IQuestionRepo _questionRepo): IQuestionService
+public class QuestionService (IQuestionRepo _questionRepo , IAIService _aiService): IQuestionService
 {
     public async Task<IEnumerable<Question>> GetAllQuestionsAsync()
     {
@@ -65,6 +66,13 @@ public class QuestionService (IQuestionRepo _questionRepo): IQuestionService
                     throw new Exception("True/False question requires exactly one answer.");
                 }
                 return VerifyTrueFalseAnswer(question, answer[0]);
+            case Question.QuestionType.ShortAnswer:
+                if (answer.Count != 1)
+                {
+                    throw new Exception("Short answer question requires exactly one answer.");
+                }
+
+                return VerifyShortAnswer(question, answer[0]);
                 
             default:
                 throw new Exception("Unknown question type.");
@@ -106,6 +114,16 @@ public class QuestionService (IQuestionRepo _questionRepo): IQuestionService
         return question.CorrectAnswer == parsedAnswer;
     }
     
+    private bool VerifyShortAnswer(Question question, string answer)
+    {
+        if (string.IsNullOrWhiteSpace(question.Answer))
+        {
+            throw new Exception("No correct answer provided for short answer question");
+        }
+        var verifiedAnswer = _aiService.VerifyAnswer(question, answer).Result;
+        return verifiedAnswer.IsCorrect;
+        
+    }
     
     
     
