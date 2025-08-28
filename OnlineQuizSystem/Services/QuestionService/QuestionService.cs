@@ -120,6 +120,10 @@ public class QuestionService (IQuestionRepo _questionRepo , IAIService _aiServic
         {
             throw new Exception("No correct answer provided for short answer question");
         }
+        if (string.Equals(question.Answer.Trim(), answer.Trim(), StringComparison.OrdinalIgnoreCase))
+        {
+            return true; // Direct match
+        }
         var verifiedAnswer = _aiService.VerifyAnswer(question, answer).Result;
         return verifiedAnswer.IsCorrect;
         
