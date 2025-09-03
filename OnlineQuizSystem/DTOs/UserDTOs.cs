@@ -30,5 +30,10 @@ public class UserDTOs
         public string Role { get; set; } = string.Empty; // Default role is User
         public string? Token { get; set; } = string.Empty; // JWT token for authentication
     }
+    public class ChangePasswordDTO
+    {
+        public string CurrentPassword { get; set; } = string.Empty;
+        public string NewPassword { get; set; } = string.Empty;
+    }
      
 }

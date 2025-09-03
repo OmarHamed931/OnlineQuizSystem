@@ -13,6 +13,8 @@ using OnlineQuizSystem.DTOs;
 using OnlineQuizSystem.Repositories.QuestionRepo;
 using OnlineQuizSystem.Repositories.UserRepo;
 using OnlineQuizSystem.Services.AIService;
+using OnlineQuizSystem.Services.EmailService;
+using OnlineQuizSystem.Services.OtpService;
 using OnlineQuizSystem.Services.QuestionService;
 using OnlineQuizSystem.Utilities;
 
@@ -40,6 +42,15 @@ builder.Services.AddScoped<IQuestionRepo, QuestionRepo>();
 
 // AI services
 builder.Services.AddSingleton<IAIService, AIService>();
+
+// Email services
+builder.Services.AddSingleton<IEmailService, EmailService>();
+
+// Otp services
+builder.Services.AddSingleton<IOtpService, OtpService>();
+
+// Memory cache
+builder.Services.AddMemoryCache();
 
 // seeders 
 using (var scope = builder.Services.BuildServiceProvider().CreateScope())
