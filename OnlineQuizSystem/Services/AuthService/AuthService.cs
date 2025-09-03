@@ -94,14 +94,37 @@ public class AuthService : IAuthService
         throw new Exception("Failed to update password");
     }
     
-    public async Task<bool> GetResetPasswordAsync(string userEmail)
+    public async Task<bool> RequestResetPasswordAsync(string userEmail)
     {
+        var user = await _userRepo.GetUserByEmailAsync(userEmail);
+        if (user == null)
+            throw new Exception("User not found");
         // This method would typically send a password reset email to the user
         var otp = _otpService.GenerateOtp(userEmail);
         // Send email to userEmail with OTP password reset code
         await _emailService.SendEmailAsync(userEmail, otp);
         return true;
         
+    }
+
+    public async Task ResetPasswordAsync(UserDTOs.ResetPasswordDTO resetPasswordDto)
+    {
+        var user = await _userRepo.GetUserByEmailAsync(resetPasswordDto.Email);
+        if (user == null)
+            throw new Exception("User not found");
+        // Verify the OTP
+        var isOtpValid = _otpService.ValidateOtp(resetPasswordDto.Otp,resetPasswordDto.Email);
+        if (!isOtpValid)
+            throw new Exception("Invalid OTP");
+        // Generate a new salt and hash the new password
+        user.Salt = GenerateSalt();
+        user.PasswordHash = HashPassword(resetPasswordDto.NewPassword, user.Salt);
+        user.UpdatedAt = DateTime.UtcNow;
+        // Update the user in the database
+        var updatedUser = await _userRepo.UpdateUserAsync(user);
+        if (updatedUser != null)
+            return;
+        throw new Exception("Failed to update password");
     }
 
     private string GenerateSalt()

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using OnlineQuizSystem.Services.AuthService;
 using System.Security.Claims;
+using OnlineQuizSystem.DTOs;
 
 namespace OnlineQuizSystem.Controllers;
 
@@ -78,19 +79,43 @@ public class AuthController : Controller
             return BadRequest(ex.Message);
         }
     }
-    [HttpGet("reset-password")]
-    [Authorize]
-    public async Task<IActionResult> ResetPassword()
+    [HttpPost("reset-password")]
+    public async Task<IActionResult> RequestResetPassword(string email)
     {
-        var userEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-        if (userEmail == null)
-            throw new Exception("User email not found");
-        // send email to userEmail with OTP password reset code
-        await _AuthService.GetResetPasswordAsync(userEmail);
-        return Ok("If the email exists, a password reset code has been sent.");
-        
-        
+        if (string.IsNullOrEmpty(email))
+        {
+            return BadRequest("Email is required.");
+        }
+        try
+        {
+            await _AuthService.RequestResetPasswordAsync(email);
+            return Ok("If the email exists, a reset link has been sent.");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
+    
+    [HttpPatch("reset-password")]
+    public async Task<IActionResult> ResetPassword(UserDTOs.ResetPasswordDTO resetPasswordDto)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest("Invalid data.");
+        }
+        try
+        {
+            await _AuthService.ResetPasswordAsync(resetPasswordDto);
+            return Ok("Password has been reset successfully.");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+    
+    
     
     
     

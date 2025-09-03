@@ -16,11 +16,11 @@ public class OtpService : IOtpService
         _cache.Set(key, otp, TimeSpan.FromMinutes(20)); // OTP valid for 20 minutes
         return otp;
     }
-    public bool ValidateOtp(string inputOtp, string actualOtp , string key)
+    public bool ValidateOtp(string inputOtp, string key)
     {
         if(_cache.TryGetValue(key, out string? cachedOtp))
         {
-            if(cachedOtp == inputOtp && cachedOtp == actualOtp)
+            if(cachedOtp == inputOtp)
             {
                 _cache.Remove(key); // Invalidate OTP after successful validation
                 return true;
