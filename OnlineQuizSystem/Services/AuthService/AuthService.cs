@@ -73,7 +73,7 @@ public class AuthService : IAuthService
 
     public async Task<bool> ChangePasswordAsync(string userId, UserDTOs.ChangePasswordDTO changePasswordDto)
     {
-        var user = _userRepo.GetUserByIdAsync(Guid.Parse(userId)).Result;
+        var user = await _userRepo.GetUserByIdAsync(Guid.Parse(userId));
         if (user == null)
         {
             throw new Exception("User not found");
