@@ -25,7 +25,7 @@ cd QuizSystem
 2️⃣ Update the Connection String
 Open appsettings.json and confirm your local SQL Server setup:
 ```json
-"DefaultConnection": "Server=localhost\\SQLEXPRESS;Database=QuizSystem;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True"
+"DefaultConnection": "Server=localhost\\SQLEXPRESS;Database=QuizSystem;Trusted_Connection=True;TrustServerCertificate=True"
 ```
 if you're using a different SQL Server instance, update accordingly.
 
