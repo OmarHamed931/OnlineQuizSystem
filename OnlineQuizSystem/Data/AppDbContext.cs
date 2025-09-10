@@ -16,6 +16,7 @@ public class AppDbContext : DbContext
     // public DbSet<Models.Answer> Answers { get; set; }
     public DbSet<User> Users { get; set; }
     // public DbSet<Models.UserQuiz> UserQuizzes { get; set; }
+    public DbSet<Models.Category> Categories { get; set; }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -37,6 +38,15 @@ public class AppDbContext : DbContext
                 choice.WithOwner().HasForeignKey("QuestionId");
                 choice.HasKey(c => c.Id);
             });
+        });
+        // Configure the Category entity
+        modelBuilder.Entity<Category>(entity =>
+        {
+            entity.HasKey(c => c.Id);
+            entity.HasMany(c => c.Questions)
+                  .WithOne(q => q.Category)
+                  .HasForeignKey(q => q.CategoryId)
+                  .OnDelete(DeleteBehavior.ClientCascade);
         });
         
         // Add any additional configurations for other entities here

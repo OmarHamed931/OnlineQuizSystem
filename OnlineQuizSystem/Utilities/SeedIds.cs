@@ -13,4 +13,10 @@ public static class SeedIds
     public static readonly Guid C4 = Guid.Parse("bbbbbbb1-bbbb-bbbb-bbbb-bbbbbbbbbbbb");
     public static readonly Guid C5 = Guid.Parse("bbbbbbb2-bbbb-bbbb-bbbb-bbbbbbbbbbbb");
     public static readonly Guid C6 = Guid.Parse("bbbbbbb3-bbbb-bbbb-bbbb-bbbbbbbbbbbb");
+    
+    public static readonly Guid Geography = C1;
+    public static readonly Guid Mathematics = C2;
+    public static readonly Guid GeneralKnowledge = C3;
+    public static readonly Guid Literature = C4;
+    
 }

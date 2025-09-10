@@ -25,6 +25,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
+//database exception filter
 
 // Authentication and Authorization services
 builder.Services.AddScoped<IAuthService, AuthService>();
@@ -52,13 +53,15 @@ builder.Services.AddSingleton<IOtpService, OtpService>();
 // Memory cache
 builder.Services.AddMemoryCache();
 
-// seeders 
-using (var scope = builder.Services.BuildServiceProvider().CreateScope())
-{
-    var services = scope.ServiceProvider;
-    var context = services.GetRequiredService<AppDbContext>();
-    await Seeder.SeedQuestionsAsync(context);
-}
+// logger service
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.AddDebug();
+builder.Logging.SetMinimumLevel(LogLevel.Information);
+
+
+
+
 // AI service test 
 
 /*
@@ -103,6 +106,28 @@ builder.Services.AddSwaggerGen();
 
 
 var app = builder.Build();
+
+// Seed initial data
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<AppDbContext>();
+    var logger = services.GetRequiredService<ILogger<Program>>();
+    try
+    {
+        context.Database.Migrate();
+        logger.LogInformation("Database migrated successfully.");
+        await Seeder.SeedCategoriesAsync(context);
+        await Seeder.SeedQuestionsAsync(context);
+    }
+    catch (Exception ex)
+    {
+        
+        logger.LogError(ex, "An error occurred while migrating the database.");
+    }
+
+    
+}
 
 
 
