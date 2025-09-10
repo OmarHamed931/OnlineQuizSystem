@@ -8,9 +8,14 @@ public interface IQuestionRepo
     Task<Question?> GetQuestionByIdAsync(Guid id);
     Task <Question> AddQuestionAsync(Question question);
     
-    /*Task UpdateQuestionAsync(Question question);
-    Task DeleteQuestionAsync(int id);
+    Task <Question> UpdateQuestionAsync(Question question);
+    Task DeleteQuestionAsync(Guid id);
+    
+    Task<IEnumerable<Question>> GetQuestionsByCategoryIdAsync(Guid categoryId);
+    
+    
+    /*
     Task<IEnumerable<Question>> GetQuestionsByQuizIdAsync(int quizId);
-    Task<IEnumerable<Question>> GetQuestionsByCategoryIdAsync(int categoryId);*/
+*/
     
 }

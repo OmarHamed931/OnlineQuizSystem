@@ -46,7 +46,7 @@ public class AppDbContext : DbContext
             entity.HasMany(c => c.Questions)
                   .WithOne(q => q.Category)
                   .HasForeignKey(q => q.CategoryId)
-                  .OnDelete(DeleteBehavior.ClientCascade);
+                  .OnDelete(DeleteBehavior.SetNull);
         });
         
         // Add any additional configurations for other entities here
