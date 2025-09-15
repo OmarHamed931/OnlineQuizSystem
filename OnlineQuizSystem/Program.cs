@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.Json.Serialization;
 using GenerativeAI;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -10,9 +11,11 @@ using OnlineQuizSystem.Services.AuthService;
 using OnlineQuizSystem.Services.JWTService;
 using OnlineQuizSystem.Data;
 using OnlineQuizSystem.DTOs;
+using OnlineQuizSystem.Repositories.CategoryRepo;
 using OnlineQuizSystem.Repositories.QuestionRepo;
 using OnlineQuizSystem.Repositories.UserRepo;
 using OnlineQuizSystem.Services.AIService;
+using OnlineQuizSystem.Services.CategoryService;
 using OnlineQuizSystem.Services.EmailService;
 using OnlineQuizSystem.Services.OtpService;
 using OnlineQuizSystem.Services.QuestionService;
@@ -49,6 +52,10 @@ builder.Services.AddSingleton<IEmailService, EmailService>();
 
 // Otp services
 builder.Services.AddSingleton<IOtpService, OtpService>();
+
+// Category services
+builder.Services.AddScoped<ICategoryRepo, CategoryRepo>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 
 // Memory cache
 builder.Services.AddMemoryCache();
@@ -100,7 +107,12 @@ builder.Services.AddAuthentication(options =>
     });
 
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+        options.JsonSerializerOptions.MaxDepth = 64;
+    });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
