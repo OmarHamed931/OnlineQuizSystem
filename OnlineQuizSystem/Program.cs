@@ -108,11 +108,11 @@ builder.Services.AddAuthentication(options =>
 
 
 builder.Services.AddControllers()
-    .AddJsonOptions(options =>
+    /*.AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
         options.JsonSerializerOptions.MaxDepth = 64;
-    });
+    })*/;
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
