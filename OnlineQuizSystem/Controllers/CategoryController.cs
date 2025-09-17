@@ -30,7 +30,7 @@ public class CategoryController(ICategoryService _categoryService) : Controller
     
     [HttpPost]
     [Authorize(Roles = "Admin,SuperAdmin")]
-    public async Task<IActionResult> AddCategory(DTOs.CategoryDTOs.CategoryDTO categoryDto)
+    public async Task<IActionResult> AddCategory(DTOs.CategoryDTOs.CreateCategoryDTO categoryDto)
     {
         if (!ModelState.IsValid)
             return BadRequest("Invalid category data.");
