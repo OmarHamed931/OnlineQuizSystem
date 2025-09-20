@@ -23,7 +23,7 @@ public class CategoryService : ICategoryService
         {    Id = c.Id,
             Name = c.Name,
             Description = c.Description,
-            NumberOfQuestions = c.Questions.Count
+                        NumberOfQuestions = c.Questions != null ? c.Questions.Count : 0
 
         }).ToList();
 
@@ -37,6 +37,9 @@ public class CategoryService : ICategoryService
 
     public async Task<Category> AddCategoryAsync(CategoryDTOs.CreateCategoryDTO categoryDto)
     {
+        var existingCategory = await _categoryRepo.GetCategoryByNameAsync(categoryDto.Name);
+        if (existingCategory != null)
+            throw new Exception("Category with the same name already exists.");
         var category = new Category
         {
             Name = categoryDto.Name,

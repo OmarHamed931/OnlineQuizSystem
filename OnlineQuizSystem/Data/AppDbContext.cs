@@ -43,6 +43,8 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Category>(entity =>
         {
             entity.HasKey(c => c.Id);
+            entity.HasIndex(c => c.Name).IsUnique();
+            // Configure one-to-many relationship with Question
             entity.HasMany(c => c.Questions)
                   .WithOne(q => q.Category)
                   .HasForeignKey(q => q.CategoryId)

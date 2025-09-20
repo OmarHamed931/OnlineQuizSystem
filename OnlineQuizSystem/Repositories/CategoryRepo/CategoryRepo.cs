@@ -12,7 +12,7 @@ public class CategoryRepo(AppDbContext _context) : ICategoryRepo
     }
     public async Task<Category?> GetCategoryByIdAsync(Guid id)
     {
-        return await _context.Categories.FindAsync(id);
+        return await _context.Categories.Include(c => c.Questions).FirstOrDefaultAsync(c => c.Id == id);
     }
     public async Task<Category> AddCategoryAsync(Category category)
     {

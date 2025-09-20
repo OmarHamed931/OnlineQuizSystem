@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 using GenerativeAI;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication;
@@ -98,7 +99,7 @@ builder.Services.AddAuthentication(options =>
         {
             ValidateIssuer = false,
             ValidateAudience = false,
-            ValidateLifetime = false,
+            ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             ValidAudience = builder.Configuration["Jwt:Audience"],
@@ -115,6 +116,8 @@ builder.Services.AddControllers()
     })*/;
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
 
 
 var app = builder.Build();
@@ -146,9 +149,12 @@ using (var scope = app.Services.CreateScope())
 app.MapControllers();
 if (app.Environment.IsDevelopment())
 {
+    app.UseDeveloperExceptionPage();
+    app.UseMigrationsEndPoint();
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 
 app.UseHttpsRedirection();
 app.UseAuthentication();
