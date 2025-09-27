@@ -68,6 +68,16 @@ public class QuestionController(IQuestionService _QuestionService) : Controller
             return BadRequest(ex.Message);
         }
     }
+    // to be implemented later
+    /*[HttpPatch("{id}")]
+    [Authorize(Roles = "Admin,SuperAdmin")]
+    public async Task<IActionResult> UpdateQuestion(string id, [FromBody] QuestionDTOs.UpdateQuestionDTO UpdateQuestionDTO)
+    
+    [HttpDelete("{id}")]
+    [Authorize(Roles = "Admin,SuperAdmin")]
+    public async Task<IActionResult> DeleteQuestion(string id)
+    */
+    
 }
 
 

@@ -24,17 +24,15 @@ public class QuestionRepo(AppDbContext _context) : IQuestionRepo
     }
 
     // Uncomment if you want to implement update functionality
-    /*
-    public async Task UpdateQuestionAsync(Question question)
+    public async Task<Question> UpdateQuestionAsync(Question question)
     {
         _context.Questions.Update(question);
         await _context.SaveChangesAsync();
+        return question;
     }
-    */
 
     // Uncomment if you want to implement delete functionality
-    /*
-    public async Task DeleteQuestionAsync(int id)
+    public async Task DeleteQuestionAsync(Guid id)
     {
         var question = await GetQuestionByIdAsync(id);
         if (question != null)
@@ -43,5 +41,12 @@ public class QuestionRepo(AppDbContext _context) : IQuestionRepo
             await _context.SaveChangesAsync();
         }
     }
-    */
+
+    public async Task<IEnumerable<Question>> GetQuestionsByCategoryIdAsync(Guid categoryId)
+    {
+        return await _context.Questions
+            .Where(q => q.CategoryId == categoryId)
+            .ToListAsync();
+    }
+    
 }

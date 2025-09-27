@@ -1,7 +1,9 @@
 using System.Text;
+using System.Text.Json.Serialization;
 using GenerativeAI;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication;
@@ -10,9 +12,11 @@ using OnlineQuizSystem.Services.AuthService;
 using OnlineQuizSystem.Services.JWTService;
 using OnlineQuizSystem.Data;
 using OnlineQuizSystem.DTOs;
+using OnlineQuizSystem.Repositories.CategoryRepo;
 using OnlineQuizSystem.Repositories.QuestionRepo;
 using OnlineQuizSystem.Repositories.UserRepo;
 using OnlineQuizSystem.Services.AIService;
+using OnlineQuizSystem.Services.CategoryService;
 using OnlineQuizSystem.Services.EmailService;
 using OnlineQuizSystem.Services.OtpService;
 using OnlineQuizSystem.Services.QuestionService;
@@ -25,6 +29,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
+//database exception filter
 
 // Authentication and Authorization services
 builder.Services.AddScoped<IAuthService, AuthService>();
@@ -49,16 +54,22 @@ builder.Services.AddSingleton<IEmailService, EmailService>();
 // Otp services
 builder.Services.AddSingleton<IOtpService, OtpService>();
 
+// Category services
+builder.Services.AddScoped<ICategoryRepo, CategoryRepo>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+
 // Memory cache
 builder.Services.AddMemoryCache();
 
-// seeders 
-using (var scope = builder.Services.BuildServiceProvider().CreateScope())
-{
-    var services = scope.ServiceProvider;
-    var context = services.GetRequiredService<AppDbContext>();
-    await Seeder.SeedQuestionsAsync(context);
-}
+// logger service
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.AddDebug();
+builder.Logging.SetMinimumLevel(LogLevel.Information);
+
+
+
+
 // AI service test 
 
 /*
@@ -88,7 +99,7 @@ builder.Services.AddAuthentication(options =>
         {
             ValidateIssuer = false,
             ValidateAudience = false,
-            ValidateLifetime = false,
+            ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             ValidAudience = builder.Configuration["Jwt:Audience"],
@@ -97,21 +108,53 @@ builder.Services.AddAuthentication(options =>
     });
 
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    /*.AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+        options.JsonSerializerOptions.MaxDepth = 64;
+    })*/;
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
 
 
 var app = builder.Build();
+
+// Seed initial data
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<AppDbContext>();
+    var logger = services.GetRequiredService<ILogger<Program>>();
+    try
+    {
+        context.Database.Migrate();
+        logger.LogInformation("Database migrated successfully.");
+        await Seeder.SeedCategoriesAsync(context);
+        await Seeder.SeedQuestionsAsync(context);
+    }
+    catch (Exception ex)
+    {
+        
+        logger.LogError(ex, "An error occurred while migrating the database.");
+    }
+
+    
+}
 
 
 
 app.MapControllers();
 if (app.Environment.IsDevelopment())
 {
+    app.UseDeveloperExceptionPage();
+    app.UseMigrationsEndPoint();
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 
 app.UseHttpsRedirection();
 app.UseAuthentication();

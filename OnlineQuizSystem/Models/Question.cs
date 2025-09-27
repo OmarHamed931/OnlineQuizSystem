@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 
 namespace OnlineQuizSystem.Models;
@@ -10,6 +11,10 @@ public class Question
     public string Text { get; set; } = string.Empty;
     public string? ImageUrl { get; set; } // Optional image URL for the question
     public int Points { get; set; } = 1; // Default points for the question
+    public Guid? CategoryId { get; set; } // Foreign key to Category
+    [JsonIgnore]
+    public Category? Category { get; set; } // Navigation property to Category
+    
     public enum QuestionType
     {
         SingleChoice,
