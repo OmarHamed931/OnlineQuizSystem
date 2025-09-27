@@ -12,6 +12,7 @@ public class CategoryDTOs
         public int NumberOfQuestions { get; set; }
         
     }
+    public record UpdateDTO(string? Name, string? Description);
     
   
     

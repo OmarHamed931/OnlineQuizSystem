@@ -48,14 +48,20 @@ public class CategoryService : ICategoryService
         return await _categoryRepo.AddCategoryAsync(category);
     }
 
-    public async Task<Category?> UpdateCategoryAsync(string id, CategoryDTOs.CategoryDTO categoryDto)
+    public async Task<Category?> UpdateCategoryAsync(string id, CategoryDTOs.UpdateDTO updateDto)
     {
         var existingCategory = await _categoryRepo.GetCategoryByIdAsync(Guid.Parse(id));
         if (existingCategory == null)
-            return null;
-
-        existingCategory.Name = categoryDto.Name;
-        existingCategory.Description = categoryDto.Description;
+            throw new Exception("Category not found.");
+        if (!string.IsNullOrEmpty(updateDto.Name))
+        {
+            var nameConflictCategory = await _categoryRepo.GetCategoryByNameAsync(updateDto.Name);
+            if (nameConflictCategory != null && nameConflictCategory.Id != existingCategory.Id)
+                throw new Exception("Another category with the same name already exists.");
+            // Update only the fields that are provided in the updateDto
+            existingCategory.Name = updateDto.Name;
+        }
+        existingCategory.Description = string.IsNullOrEmpty(updateDto.Description)? existingCategory.Description : updateDto.Description;
 
         return await _categoryRepo.UpdateCategoryAsync(existingCategory);
     }

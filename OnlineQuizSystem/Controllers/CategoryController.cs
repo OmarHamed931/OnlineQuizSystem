@@ -46,15 +46,15 @@ public class CategoryController(ICategoryService _categoryService) : Controller
         }
     }
     [HttpPatch("{id}")]
-    [Authorize]
-    public async Task<IActionResult> UpdateCategory(string id, DTOs.CategoryDTOs.CategoryDTO categoryDto )
+    [Authorize(Roles = "Admin,SuperAdmin")]
+    public async Task<IActionResult> UpdateCategory(string id, DTOs.CategoryDTOs.UpdateDTO updateDto )
     {
         if (!ModelState.IsValid)
             return BadRequest("Invalid category data.");
 
         try
         {
-            var category = await _categoryService.UpdateCategoryAsync(id, categoryDto);
+            var category = await _categoryService.UpdateCategoryAsync(id, updateDto);
             if (category == null)
                 return NotFound($"Category not found.");
             return Ok(category);
