@@ -52,7 +52,7 @@ public class QuestionController(IQuestionService _QuestionService) : Controller
     }
 
     // verify answer for testing purposes before building the quiz
-    [HttpPost("{id}")]
+    /*[HttpPost("{id}")]
     public async Task<IActionResult> VerifyAnswer(string id, List<string> answers)
     {
         if (!ModelState.IsValid)
@@ -67,15 +67,16 @@ public class QuestionController(IQuestionService _QuestionService) : Controller
         {
             return BadRequest(ex.Message);
         }
-    }
+    }*/
     // to be implemented later
-    /*[HttpPatch("{id}")]
+    /*
+    [HttpPatch("{id}")]
     [Authorize(Roles = "Admin,SuperAdmin")]
-    public async Task<IActionResult> UpdateQuestion(string id, [FromBody] QuestionDTOs.UpdateQuestionDTO UpdateQuestionDTO)
+    public async Task<IActionResult> UpdateQuestion(string id, [FromBody] QuestionDTOs.UpdateQuestionDTO UpdateQuestionDTO){}
     
     [HttpDelete("{id}")]
     [Authorize(Roles = "Admin,SuperAdmin")]
-    public async Task<IActionResult> DeleteQuestion(string id)
+    public async Task<IActionResult> DeleteQuestion(string id){}
     */
     
 }

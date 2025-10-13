@@ -8,12 +8,12 @@ namespace OnlineQuizSystem.Services.QuestionService;
 
 public class QuestionService (IQuestionRepo _questionRepo , IAIService _aiService): IQuestionService
 {
-    public async Task<IEnumerable<Question>> GetAllQuestionsAsync()
+    public async Task<IEnumerable<QuestionDTOs.QuestionResponseDTO>> GetAllQuestionsAsync()
     {
         return await _questionRepo.GetAllQuestionsAsync();
     }
 
-    public async Task<Question> GetQuestionByIdAsync(string id)
+    public async Task<QuestionDTOs.QuestionResponseDTO?> GetQuestionByIdAsync(string id)
     {
         Guid guid = Guid.Parse(id);
         return await _questionRepo.GetQuestionByIdAsync(guid);
@@ -35,7 +35,7 @@ public class QuestionService (IQuestionRepo _questionRepo , IAIService _aiServic
         return await _questionRepo.AddQuestionAsync(question);
         
     }
-    public async Task<bool> VerifyAnswerAsync(string questionId, List<string> answer)
+    /*public async Task<bool> VerifyAnswerAsync(string questionId, List<string> answer)
     {
         Guid questionGuid = Guid.Parse(questionId);
         var question = await _questionRepo.GetQuestionByIdAsync(questionGuid);
@@ -80,7 +80,7 @@ public class QuestionService (IQuestionRepo _questionRepo , IAIService _aiServic
 
 
 
-    }
+    }*/
     
     private bool VerifySingleChoiceAnswer(Question question, string answer)
     {
