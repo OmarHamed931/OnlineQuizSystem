@@ -1,74 +1,45 @@
-﻿using Microsoft.Build.Framework;
+﻿using System.ComponentModel.DataAnnotations;
 using OnlineQuizSystem.Models;
 
 namespace OnlineQuizSystem.DTOs;
 
 public class QuestionDTOs
 {
-    public class CreateQuestionDTO
+    public class QuestionDTO
     {
         [Required]
-        public string Text { get; set; } = string.Empty;
+        public string Text { get; set; } 
         public string? ImageURL { get; set; } // Optional image URL for the question
         [Required]
         public Question.QuestionType Type { get; set; }
-        public List<CreateChoiceDTO> Choices { get; set; } = new List<CreateChoiceDTO>();
+        public List<CreateChoiceDTO> Choices { get; set; }
         public bool? CorrectAnswer { get; set; } // For True/False questions
-        public string? Answer { get; set; } = string.Empty; // For Short Answer questions
-        public int Points { get; set; } = 1; // Default points for the question
+        public string? Answer { get; set; } // For Short Answer questions
+        public int Points { get; set; } // Default points for the question
         public Guid? CategoryId { get; set; } // Foreign key to Category
 
-        public CreateQuestionDTO(string text, Question.QuestionType type, List<CreateChoiceDTO> choices, bool? correctAnswer, string? answer, int points, Guid? categoryId, string? imageURL = null)
+        public QuestionDTO(string text, Question.QuestionType type, List<CreateChoiceDTO?> choices, bool? correctAnswer, string? answer,Guid? categoryId,int points = 1, string? imageURL = null)
         {
             Text = text;
             ImageURL = imageURL;
-            switch (type)
-            {
-                case Question.QuestionType.SingleChoice:
-                case Question.QuestionType.MultipleChoice:
-                    if (choices == null || choices.Count == 0)
-                    {
-                        throw new ArgumentException("Choices cannot be null or empty for Single and Multiple Choice questions.");
-                    }
-                    // nullify CorrectAnswer and Answer for these types
-                    CorrectAnswer = null;
-                    Answer = null;
-                    break;
-                case Question.QuestionType.TrueFalse:
-                    if (correctAnswer == null)
-                    {
-                        throw new ArgumentException("CorrectAnswer must be provided for True/False questions.");
-                    }
-                    // nullify Choices and Answer for this type
-                    Choices = [];
-                    Answer = null;
-                    break;
-                case Question.QuestionType.ShortAnswer:
-                    if (string.IsNullOrWhiteSpace(answer))
-                    {
-                        throw new ArgumentException("Answer cannot be null or empty for Short Answer questions.");
-                    }
-                    // nullify Choices and CorrectAnswer for this type
-                    Choices = [];
-                    CorrectAnswer = null;
-                    break;
-                default:
-                    throw new ArgumentException("Invalid question type.");
-            }
+            Type = type;
+            Choices = choices.Where(c => c != null).Select(c => new CreateChoiceDTO(c!.Text, c.IsCorrect)).ToList();
+            CorrectAnswer = correctAnswer;
+            Answer = answer;
+            Points = points;
             CategoryId = categoryId;
         }
     }
-    // public record UpdateQuestionDTO(string Text, List<UpdateChoiceDTO> Choices);
     public class QuestionResponseDTO
     {
         public Guid Id { get; set; }
-        public string Text { get; set; } = string.Empty;
+        public string Text { get; set; } 
         public string? ImageURL { get; set; } // Optional image URL for the question
         public Question.QuestionType Type { get; set; }
-        public List<Choice?> Choices { get; set; } = new List<Choice?>();
+        public List<Choice?> Choices { get; set; } // Collection of choices for Single and Multiple Choice questions with correct answers
         public bool? CorrectAnswer { get; set; } // For True/False questions
-        public string? Answer { get; set; } = string.Empty; // For Short Answer questions
-        public int Points { get; set; } = 1; // Default points for the question
+        public string? Answer { get; set; } // For Short Answer questions
+        public int Points { get; set; }  // Default points for the question
         public Guid? CategoryId { get; set; } // Foreign key to Category
         public string? CategoryName { get; set; } // Convenience property to access category name
 
@@ -88,8 +59,10 @@ public class QuestionDTOs
         
     }
     
+    
+    }
+    
     public record CreateChoiceDTO(string Text, bool IsCorrect);
     // public record UpdateChoiceDTO(int Id, string Text, bool IsCorrect);
     // public record ChoiceResponseDTO(int Id, string Text, bool IsCorrect);
     
-}

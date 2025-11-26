@@ -46,18 +46,27 @@ public class QuestionRepo(AppDbContext _context) : IQuestionRepo
 
     public async Task<Question> AddQuestionAsync(Question question)
     {
+        // might need to use DTOs for better query performance
         _context.Questions.Add(question);
         await _context.SaveChangesAsync();
-        return question;
+        var response = _context.Questions.Include(q => q.Category).FirstOrDefault(q => q.Id == question.Id);
+        return response;
     }
 
     // Uncomment if you want to implement update functionality
-    public async Task<Question> UpdateQuestionAsync(Question question)
+
+    public async Task<Question> UpdateQuestionAsync(Guid id, Question question)
     {
         _context.Questions.Update(question);
         await _context.SaveChangesAsync();
-        return question;
+        var response = _context.Questions.Include(q => q.Category).FirstOrDefault(q => q.Id == question.Id);
+        return response;
+        
+     
+        
     }
+
+
 
     // Uncomment if you want to implement delete functionality
     public async Task DeleteQuestionAsync(Guid id)
@@ -75,6 +84,10 @@ public class QuestionRepo(AppDbContext _context) : IQuestionRepo
         return await _context.Questions
             .Where(q => q.CategoryId == categoryId)
             .ToListAsync();
+    }
+    public async Task<Question?> GetQuestionEntityByIdAsync(Guid id)
+    {
+        return await _context.Questions.FindAsync(id);
     }
     
 }

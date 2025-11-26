@@ -36,7 +36,6 @@ public class AppDbContext : DbContext
             entity.OwnsMany(q => q.Choices, choice =>
             {
                 choice.WithOwner().HasForeignKey("QuestionId");
-                choice.HasKey(c => c.Id);
             });
         });
         // Configure the Category entity
