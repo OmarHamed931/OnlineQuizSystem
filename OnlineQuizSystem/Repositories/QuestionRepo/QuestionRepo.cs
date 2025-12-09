@@ -61,9 +61,6 @@ public class QuestionRepo(AppDbContext _context) : IQuestionRepo
         await _context.SaveChangesAsync();
         var response = _context.Questions.Include(q => q.Category).FirstOrDefault(q => q.Id == question.Id);
         return response;
-        
-     
-        
     }
 
 
