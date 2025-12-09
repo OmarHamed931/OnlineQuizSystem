@@ -91,14 +91,14 @@ public class QuestionService (IQuestionRepo _questionRepo , IAIService _aiServic
 
     public void validate(QuestionDTOs.QuestionDTO dto)
     {
+        // all exception must be reformed to normal exception rather than HTTP exceptions
         switch (dto.Type)
         {
             case Question.QuestionType.SingleChoice:
             case Question.QuestionType.MultipleChoice:
                 if (dto.Choices == null || dto.Choices.Count == 0)
                 {
-                    throw new BadHttpRequestException(
-                        "Choices cannot be null or empty for Single and Multiple Choice questions.");
+                    throw new Exception("Choices cannot be null or empty for Single and Multiple Choice questions.");
                 }
 
                 // nullify CorrectAnswer and Answer for these types
@@ -108,7 +108,7 @@ public class QuestionService (IQuestionRepo _questionRepo , IAIService _aiServic
             case Question.QuestionType.TrueFalse:
                 if (dto.CorrectAnswer == null)
                 {
-                    throw new BadHttpRequestException("CorrectAnswer must be provided for True/False questions.");
+                    throw new Exception("CorrectAnswer must be provided for True/False questions.");
                 }
 
                 // nullify Choices and Answer for this type
@@ -118,7 +118,7 @@ public class QuestionService (IQuestionRepo _questionRepo , IAIService _aiServic
             case Question.QuestionType.ShortAnswer:
                 if (string.IsNullOrWhiteSpace(dto.Answer))
                 {
-                    throw new BadHttpRequestException("Answer cannot be null or empty for Short Answer questions.");
+                    throw new Exception("Answer cannot be null or empty for Short Answer questions.");
                 }
 
                 // nullify Choices and CorrectAnswer for this type
@@ -126,16 +126,16 @@ public class QuestionService (IQuestionRepo _questionRepo , IAIService _aiServic
                 dto.CorrectAnswer = null;
                 break;
             default:
-                throw new BadHttpRequestException("Invalid question type.");
+                throw new Exception("Invalid question type.");
         }
     }
     
     
 
-    /*public async Task<bool> VerifyAnswerAsync(string questionId, List<string> answer)
+    public async Task<bool> VerifyAnswerAsync(string questionId, List<string> answer)
     {
         Guid questionGuid = Guid.Parse(questionId);
-        var question = await _questionRepo.GetQuestionByIdAsync(questionGuid);
+        var question = await _questionRepo.GetQuestionEntityByIdAsync(questionGuid);
         if (question == null)
         {
             throw new Exception($"Question with ID {questionId} not found.");
@@ -177,7 +177,7 @@ public class QuestionService (IQuestionRepo _questionRepo , IAIService _aiServic
 
 
 
-    }*/
+    }
     
     private bool VerifySingleChoiceAnswer(Question question, string answer)
     {

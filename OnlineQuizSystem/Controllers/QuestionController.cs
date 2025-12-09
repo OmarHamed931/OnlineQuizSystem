@@ -52,7 +52,7 @@ public class QuestionController(IQuestionService _QuestionService) : Controller
     }
 
     // verify answer for testing purposes before building the quiz
-    /*[HttpPost("{id}")]
+    [HttpPost("{id}")]
     public async Task<IActionResult> VerifyAnswer(string id, List<string> answers)
     {
         if (!ModelState.IsValid)
@@ -67,14 +67,24 @@ public class QuestionController(IQuestionService _QuestionService) : Controller
         {
             return BadRequest(ex.Message);
         }
-    }*/
-    // to be implemented later
+    }
+
     [HttpPatch("{id}")]
     [Authorize(Roles = "Admin,SuperAdmin")]
     public async Task<IActionResult> UpdateQuestion(string id, [FromBody] QuestionDTOs.QuestionDTO UpdateDTO)
     {
-        var question = await _QuestionService.UpdateQuestionAsync(Guid.Parse(id), UpdateDTO);
-        return Ok(question);
+        if (!ModelState.IsValid)
+            return BadRequest("Invalid question data.");
+        try
+        {
+            var question = await _QuestionService.UpdateQuestionAsync(Guid.Parse(id), UpdateDTO);
+            return Ok(question);
+
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
 
 
     }
