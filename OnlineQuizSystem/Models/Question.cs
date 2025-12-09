@@ -12,8 +12,9 @@ public class Question
     public string? ImageUrl { get; set; } // Optional image URL for the question
     public int Points { get; set; } = 1; // Default points for the question
     public Guid? CategoryId { get; set; } // Foreign key to Category
+    public string? CategoryName => Category?.Name; // Convenience property to access category name
     [JsonIgnore]
-    public Category? Category { get; set; } // Navigation property to Category
+    public Category? Category { get; set; } // Navigation property to Category (potential reference cycle, can be deleted because it's not used)
     
     public enum QuestionType
     {

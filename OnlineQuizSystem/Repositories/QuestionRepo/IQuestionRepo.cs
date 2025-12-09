@@ -1,14 +1,16 @@
-﻿using OnlineQuizSystem.Models;
+﻿using OnlineQuizSystem.DTOs;
+using OnlineQuizSystem.Models;
 
 namespace OnlineQuizSystem.Repositories.QuestionRepo;
 
 public interface IQuestionRepo
 {
-    Task<IEnumerable<Question>> GetAllQuestionsAsync();
-    Task<Question?> GetQuestionByIdAsync(Guid id);
+    Task<IEnumerable<QuestionDTOs.QuestionResponseDTO>> GetAllQuestionsAsync();
+    Task<QuestionDTOs.QuestionResponseDTO?> GetQuestionByIdAsync(Guid id);
+    Task<Question> GetQuestionEntityByIdAsync(Guid id);
     Task <Question> AddQuestionAsync(Question question);
     
-    Task <Question> UpdateQuestionAsync(Question question);
+    Task <Question> UpdateQuestionAsync(Guid id ,Question question);
     Task DeleteQuestionAsync(Guid id);
     
     Task<IEnumerable<Question>> GetQuestionsByCategoryIdAsync(Guid categoryId);

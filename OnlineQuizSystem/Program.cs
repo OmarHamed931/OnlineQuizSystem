@@ -70,20 +70,6 @@ builder.Logging.SetMinimumLevel(LogLevel.Information);
 
 
 
-// AI service test 
-
-/*
-var apiKey = Environment.GetEnvironmentVariable("GEMINI_API_KEY");
-var googleAI = new GoogleAi(apiKey);
-var googleModel = googleAI.CreateGenerativeModel("models/gemini-1.5-flash");
-string Text = "What is the boiling point of water at sea level?";    
-string CorrectAnswer = "100°C";
-string submittedAnswer = "It boils";
-var prompt = $"Question: {Text}\nCorrect Answer: {CorrectAnswer}\nSubmitted Answer: {submittedAnswer}\nIs the submitted answer correct? Answer with 'true' or 'false' with explanation.";
-var response = await googleModel.GenerateObjectAsync<AnswerDTOs.ShortAnswerDTO>(prompt);
-Console.WriteLine($"AI Response: {response.IsCorrect}, Confidence: {response.Confidence}, explanation: {response.explanation}");
-Console.WriteLine(response.Confidence);
-*/
 
 
 
@@ -108,12 +94,7 @@ builder.Services.AddAuthentication(options =>
     });
 
 
-builder.Services.AddControllers()
-    /*.AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
-        options.JsonSerializerOptions.MaxDepth = 64;
-    })*/;
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();

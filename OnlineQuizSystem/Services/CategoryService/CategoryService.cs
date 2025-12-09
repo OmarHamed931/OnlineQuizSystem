@@ -23,7 +23,7 @@ public class CategoryService : ICategoryService
         {    Id = c.Id,
             Name = c.Name,
             Description = c.Description,
-                        NumberOfQuestions = c.Questions != null ? c.Questions.Count : 0
+            NumberOfQuestions = c.Questions != null ? c.Questions.Count : 0
 
         }).ToList();
 

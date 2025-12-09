@@ -35,14 +35,14 @@ public class QuestionController(IQuestionService _QuestionService) : Controller
 
     [HttpPost]
     [Authorize(Roles = "Admin,SuperAdmin")]
-    public async Task<IActionResult> AddQuestion([FromBody] QuestionDTOs.CreateQuestionDTO CreateQuestionDTO)
+    public async Task<IActionResult> AddQuestion([FromBody] QuestionDTOs.QuestionDTO CreateDTO)
     {
         if (!ModelState.IsValid)
             return BadRequest("Invalid question data.");
 
         try
         {
-            var Question = await _QuestionService.AddQuestionAsync(CreateQuestionDTO);
+            var Question = await _QuestionService.AddQuestionAsync(CreateDTO);
             return CreatedAtAction(nameof(GetQuestionById), new { id = Question.Id }, Question);
         }
         catch (Exception ex)
@@ -68,15 +68,34 @@ public class QuestionController(IQuestionService _QuestionService) : Controller
             return BadRequest(ex.Message);
         }
     }
-    // to be implemented later
-    /*[HttpPatch("{id}")]
+
+    [HttpPatch("{id}")]
     [Authorize(Roles = "Admin,SuperAdmin")]
-    public async Task<IActionResult> UpdateQuestion(string id, [FromBody] QuestionDTOs.UpdateQuestionDTO UpdateQuestionDTO)
-    
+    public async Task<IActionResult> UpdateQuestion(string id, [FromBody] QuestionDTOs.QuestionDTO UpdateDTO)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest("Invalid question data.");
+        try
+        {
+            var question = await _QuestionService.UpdateQuestionAsync(Guid.Parse(id), UpdateDTO);
+            return Ok(question);
+
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+
+
+    }
+
     [HttpDelete("{id}")]
     [Authorize(Roles = "Admin,SuperAdmin")]
     public async Task<IActionResult> DeleteQuestion(string id)
-    */
+    {
+        await _QuestionService.DeleteQuestionAsync(Guid.Parse(id));
+        return NoContent();
+    }
     
 }
 
